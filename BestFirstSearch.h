@@ -31,7 +31,7 @@ Solution<State<T>> BestFirstSearch<T>::search(Searchable<T> searchable) {
         State<T> current = this->popOpenList();
         close.insert(current);
         if (current == goal) {
-            return this->getWay();
+            return this->getWay(searchable);
         }
         std::list<State<T>> possible = searchable.getAllPossibleStates(current);
         for (State<T> temp : possible) {

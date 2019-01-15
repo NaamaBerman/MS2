@@ -13,7 +13,7 @@
 template <class T>
 class Searcher {
     // the search method
-    Solution<T> search (Searchable<T> searchable);
+    Solution<State<T>> search (Searchable<T> searchable);
 // get how many nodes were evaluated by the algorithm
     int getNumberOfNodesEvaluated();
 

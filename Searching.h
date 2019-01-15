@@ -9,7 +9,7 @@
 #include "Searcher.h"
 #include "PriorityQueue.h"
 #include <queue>
-//#include <cstddef>
+
 
 template <class T>
 class Searching : public Searcher<T> {
@@ -23,9 +23,21 @@ protected:
         State<T> top = StateQueue.getTop();
         return top;
     }
-    Solution<State<T>> getWay() {
-        /////////// get path properly
-        SearchSolution<State<T>> solution = SearchSolution<State<T>>(this->StateQueue);
+    Solution<State<T>> getWay(Searchable<T> searchable) {
+        std::vector<State<T>> way;
+        std::vector<State<T>> solutions;
+        State<T> goal = searchable.getGoalState();
+        State<T> init = searchable.getInitialState();
+        State<T> temp = goal;
+        while (temp != init) {
+            way.push_back(temp);
+            temp = temp.getBefore();
+        }
+        way.push_back(init);
+        for(auto it = way.end; it != way.begin(); --it) {
+            solutions.push_back(*it);
+        }
+        SearchSolution<State<Point>> solution = SearchSolution<State<T>>(solutions);
         return solution;
     }
 
@@ -37,8 +49,6 @@ public:
     int listSize() {
         return StateQueue.getSize();
     }
-
-
 
 // the search method
     virtual Solution<T> search (Searchable<T> searchable) = 0;

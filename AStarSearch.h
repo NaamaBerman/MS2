@@ -14,7 +14,7 @@ class AStarSearch : public Searching<T> {
     int Heuristic(State<T> s, State<T> goal);
 public:
     // the search method
-    virtual Solution<T> search (Searchable<T> searchable);
+    virtual Solution<State<T>> search (Searchable<T> searchable);
 // get how many nodes were evaluated by the algorithm
     virtual int getNumberOfNodesEvaluated();
 
@@ -27,7 +27,7 @@ int AStarSearch<T>::Heuristic(State<T> s, State<T> goal) {
 }
 
 template<class T>
-Solution<T> AStarSearch<T>::search(Searchable<T> searchable) {
+Solution<State<T>> AStarSearch<T>::search(Searchable<T> searchable) {
     State<T> goal = searchable.getGoalState();
     State<T> initial = searchable.getInitialState();
     this->StateQueue.add(initial);
@@ -38,7 +38,7 @@ Solution<T> AStarSearch<T>::search(Searchable<T> searchable) {
         State<T> current = this->popOpenList();
         close.insert(current);
         if (current == goal) {
-            return this->getWay();
+            return this->getWay(searchable);
         }
         std::list<State<T>> possible = searchable.getAllPossibleStates(current);
         for (State<T> temp : possible) {

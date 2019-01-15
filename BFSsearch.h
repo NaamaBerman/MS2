@@ -38,7 +38,7 @@ Solution<State<T>> BFSsearch<T>::search(Searchable<T> searchable) {
             }
         }
     }
-    return this->getWay();
+    return this->getWay(searchable);
 
 
 }

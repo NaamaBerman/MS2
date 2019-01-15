@@ -77,6 +77,9 @@ public:
     void setBefore(State<T> before) {
         this->cameFrom = before;
     }
+    State<T> getBefore() {
+        return this->cameFrom;
+    }
     bool operator < (const State<T>& s) {
         return this->compareCost < s.compareCost;
     }

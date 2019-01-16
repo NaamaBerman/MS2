@@ -28,20 +28,22 @@ class MatrixSearch : public Searchable<Point> {
 
 public:
 
-    MatrixSearch(std::vector<std::vector<std::string>> s) {
+    MatrixSearch(const std::vector<std::vector<std::string>>& s) {
         this->asString = s;
         this->startX = stoi(s[0][0]);
         this->startY = stoi(s[0][1]);
-        this->endX = stoi(s[0][3]);
-        this->endY = stoi(s[0][4]);
-        auto it = s.begin();
-        it++;
+        this->endX = stoi(s[0][2]);
+        this->endY = stoi(s[0][3]);
+        auto vec = s.begin();
+        vec++;
         int row = 0;
         int column = 0;
-        for(; it != s.end(); it++) {
-            for(auto iter = (*it).begin(); iter != (*it).end(); it++) {
+        for(; vec != s.end(); vec++) {
+            for(auto &item : *vec) {
                 //State<Point> current(fromStringToState(row, column, *iter);
-                this->states[row].push_back(fromStringToState(row, column, *iter));
+                auto tmp = fromStringToState(row, column, item);
+                this->states.push_back(std::vector<State<Point>>());
+                this->states[row].push_back(tmp);
                 column++;
             }
             column = 0;

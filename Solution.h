@@ -23,9 +23,11 @@ public:
     SearchSolution(std::vector<State<T>> s) {
         this->solution = s;
     }
+
     std::vector<State<T>> getSolution() {
         return this->solution;
     }
+
 
 };
 

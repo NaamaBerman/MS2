@@ -54,6 +54,12 @@ public:
     State(const T& state) {
         this->state = state;
     }
+
+    State(const State<T>& in) {
+        this->state = in.state;
+        this->cost = in.cost;
+    }
+
     int getX() {
         return state.getX();
     }

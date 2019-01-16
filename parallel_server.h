@@ -176,7 +176,7 @@ public:
             close(newsockfd);
             server->clientLeft = true;
             server->counter--;
-           pool->mEventVar.notify_one();
+            pool->mEventVar.notify_one();
         }
     }
 };

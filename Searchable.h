@@ -54,6 +54,12 @@ public:
     State(const T& state) {
         this->state = state;
     }
+
+    State(const State<T>& in) {
+        this->state = in.state;
+        this->cost = in.cost;
+    }
+
     int getX() {
         return state.getX();
     }
@@ -99,8 +105,8 @@ public:
 template <class T>
 class Searchable {
 public:
-    virtual State<T> getInitialState() = 0;
-    virtual State<T> getGoalState() = 0;
+    virtual State<T>& getInitialState() = 0;
+    virtual State<T>& getGoalState() = 0;
     // set the parent when adding to the list
     virtual std::list<State<T>> getAllPossibleStates(State<T> s) = 0;
     virtual std::string toString() = 0;

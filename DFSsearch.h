@@ -9,8 +9,8 @@
 #include "Searcher.h"
 #include "Searching.h"
 
-template <class T>
-class DFSsearch : public Searching<T> {
+template <class T, class P, class S>
+class DFSsearch : public Searching<T, P,S> {
 public:
     // the search method
     virtual Solution<State<T>> search (Searchable<T> searchable);
@@ -19,8 +19,8 @@ public:
 
 };
 
-template<class T>
-Solution<State<T>> DFSsearch<T>::search(Searchable<T> searchable) {
+template <class T, class P, class S>
+Solution<State<T>> DFSsearch<T, P, S>::search(Searchable<T> searchable) {
     State<T> initial = searchable.getInitialState();
     std::stack<T> q;
     q.push(initial);

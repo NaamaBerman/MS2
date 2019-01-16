@@ -15,6 +15,7 @@ class MatrixSearch : public Searchable<Point> {
     State<Point> goal;
     std::vector<std::vector<State<Point>>> states;
     int matSize;
+    std::vector<std::vector<std::string>> asString;
 
     State<Point> fromStringToState(int r, int c, std::string s) {
         Point p = Point(r,c);
@@ -24,7 +25,9 @@ class MatrixSearch : public Searchable<Point> {
     }
 
 public:
+
     MatrixSearch(std::vector<std::vector<std::string>> s) {
+        this->asString = s;
         int sRow = stoi(s[0][0]);
         int sColumn = stoi(s[0][1]);
         int eRow = stoi(s[0][3]);
@@ -45,6 +48,17 @@ public:
         matSize = row;
         initial = this->states[sRow][sColumn];
         goal = this->states[eRow][eColumn];
+    }
+
+    virtual std::string toString() {
+        std::string result;
+        for(auto it = asString.begin(); it != asString.end(); it++) {
+            for(auto iter = (*it).begin(); iter != (*it).end(); it++) {
+                result += *iter + ",";
+            }
+        }
+        return result;
+
     }
     virtual State<Point> getInitialState() {
         return initial;

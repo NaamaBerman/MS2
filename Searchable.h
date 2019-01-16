@@ -5,6 +5,7 @@
 #ifndef STONE2_SEARCHABLE_H
 #define STONE2_SEARCHABLE_H
 #include <list>
+#include <string>
 
 class Point {
     int x;
@@ -94,6 +95,7 @@ class Searchable {
     virtual State<T> getGoalState() = 0;
     // set the parent when adding to the list
     virtual std::list<State<T>> getAllPossibleStates(State<T> s) = 0;
+    virtual std::string toString() = 0;
 
 };
 

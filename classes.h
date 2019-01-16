@@ -106,6 +106,7 @@ public:
         vector<vector<string>> vec2;
         while (true) {
             bzero(buffer,256);
+            //cout << "Hi" << endl;
             n = read( socket,buffer,255 );
 
             if (n < 0) {
@@ -113,25 +114,41 @@ public:
                 exit(1);
             }
             string str(buffer);
-            vec.emplace_back(splitBy(str, ','));
-            printf("Here is the message: %s\n",buffer);
+            cout << str << endl;
+
+            //n = write(socket,str.c_str(),str.length());
+            if (str != "end") {
+                vec.push_back(splitBy(str, ','));
+            }
+
+
+
+
+
             if (strcmp(buffer, "end") == 0) {
                 endPoint = vec[vec.size() - 1];
                 startPoint = vec[vec.size() - 2];
-                Points.emplace_back(startPoint[0]);
-                Points.emplace_back(startPoint[1]);
-                Points.emplace_back(endPoint[0]);
-                Points.emplace_back(endPoint[1]);
-                vec2.emplace_back(Points);
+                Points.push_back(startPoint[0]);
+                Points.push_back(startPoint[1]);
+                Points.push_back(endPoint[0]);
+                Points.push_back(endPoint[1]);
+                vec2.push_back(Points);
                 for (int i = 0; i < vec.size() - 2; i++) {
-                    vec2.emplace_back(vec[i]);
+                    vec2.push_back(vec[i]);
                 }
-                MatrixSearch* matrix = new MatrixSearch(vec2);
-                string s = StringSolution(solver->solve(matrix));
-                n = write(socket,s.c_str(),s.length());
+                //MatrixSearch* matrix = new MatrixSearch(vec2);
+                //string s = StringSolution(solver->solve(matrix));
+                //n = write(socket,s.c_str(),s.length());
                 if (n < 0) {
                     perror("ERROR writing to socket");
                     exit(1);
+                }
+                for (vector<string> v: vec2) {
+                    for (string s : v) {
+                        cout << s;
+                        cout << ",";
+                    }
+                    cout << "yey" << endl;
                 }
                 break;
             }
@@ -147,11 +164,18 @@ private:
         string acc;
         vector<string> vec;
         for (int i = 0; i < str.length(); i++) {
-            if (str[i] != c) {
+            if (str[i] != c && str[i] != ' ' ) {
                 acc+=str[i];
             } else {
-               vec.emplace_back(acc);
+                if (acc != "") {
+                    vec.push_back(acc);
+                }
+
+
                acc = "";
+            }
+            if (i == str.length() - 1) {
+                vec.push_back(acc);
             }
         }
         return vec;

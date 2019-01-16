@@ -10,6 +10,7 @@
 #include "Searchable.h"
 
 template <class S> class Solution {
+public:
     virtual std::vector<S> getSolution() = 0;
 
 };

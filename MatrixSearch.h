@@ -11,15 +11,17 @@
 #include "Searchable.h"
 
 class MatrixSearch : public Searchable<Point> {
-    State<Point> initial;
-    State<Point> goal;
+    int startX;
+    int startY;
+    int endX;
+    int endY;
     std::vector<std::vector<State<Point>>> states;
     int matSize;
     std::vector<std::vector<std::string>> asString;
 
     State<Point> fromStringToState(int r, int c, std::string s) {
-        Point p = Point(r,c);
-        State<Point> state = State<Point>(p);
+        Point p(r,c);
+        State<Point> state(p);
         state.setCost(stoi(s));
         return state;
     }
@@ -28,26 +30,25 @@ public:
 
     MatrixSearch(std::vector<std::vector<std::string>> s) {
         this->asString = s;
-        int sRow = stoi(s[0][0]);
-        int sColumn = stoi(s[0][1]);
-        int eRow = stoi(s[0][3]);
-        int eColumn = stoi(s[0][4]);
+        this->startX = stoi(s[0][0]);
+        this->startY = stoi(s[0][1]);
+        this->endX = stoi(s[0][3]);
+        this->endY = stoi(s[0][4]);
         auto it = s.begin();
         it++;
         int row = 0;
         int column = 0;
         for(; it != s.end(); it++) {
             for(auto iter = (*it).begin(); iter != (*it).end(); it++) {
-                State<Point> current = fromStringToState(row, column, *iter);
-                this->states[row].push_back(current);
+                //State<Point> current(fromStringToState(row, column, *iter);
+                this->states[row].push_back(fromStringToState(row, column, *iter));
                 column++;
             }
             column = 0;
             row++;
         }
         matSize = row;
-        initial = this->states[sRow][sColumn];
-        goal = this->states[eRow][eColumn];
+
     }
 
     virtual std::string toString() {
@@ -61,9 +62,11 @@ public:
 
     }
     virtual State<Point> getInitialState() {
+        State<Point> initial = this->states[this->startX][this->startY];
         return initial;
     }
     virtual State<Point> getGoalState() {
+        State<Point> goal = this->states[this->endX][this->endY];
         return goal;
     }
 

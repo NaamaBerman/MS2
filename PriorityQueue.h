@@ -14,15 +14,15 @@ using namespace std;
 template <class S>
 class PriorityQueue {
     std::vector<S> queue;
-    S getMin() {
+    int getMin() {
         int size = queue.size();
         if (size == 0) {
-            return nullptr;
+            return -1;
         }
         int min = 0;
         int i = 0;
         for(auto it = queue.begin(); it != queue.end(); ++it) {
-            if (*it < min) {
+            if (*it < queue[min]) {
                 min = i;
             }
             i++;
@@ -39,7 +39,7 @@ public:
     S getTop() {
         int min = getMin();
         S top = this->queue[min];
-        this->queue.erase(min);
+        getOut(top);
         return top;
     }
     int getSize() {
@@ -58,15 +58,11 @@ public:
     }
 
     void getOut(S var) {
-        int i = 0;
-        int index = -1;
         for(auto it = queue.begin(); it != queue.end(); ++it) {
             if (*it == var) {
-                index = i;
+                this->queue.erase(it);
             }
-            i++;
         }
-        this->queue.erase(index);
 
     }
 

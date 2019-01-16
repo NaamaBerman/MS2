@@ -15,6 +15,14 @@ public:
         this->x = x;
         this->y = y;
     }
+    Point(const Point& p) {
+        this->x = p.x;
+        this->y = p.y;
+    }
+    Point() {
+        this->x = 0;
+        this->y = 0;
+    }
     bool operator == (const Point& p) {
         if (this->x == p.x) {
             if (this->y == p.y) {
@@ -39,11 +47,11 @@ template <class T> class State {
     // cost to reach this state (set by a setter)
     double cost;
     // the state we came from to this state (setter)
-    State<T> cameFrom;
+    State<T>* cameFrom;
     double totalCost;
     double compareCost;
 public:
-    State(T state) {
+    State(const T& state) {
         this->state = state;
     }
     int getX() {
@@ -75,22 +83,22 @@ public:
     double getCompareCost() {
         return this->compareCost;
     }
-    void setBefore(State<T> before) {
-        this->cameFrom = before;
+    void setBefore(State<T>& before) {
+        this->cameFrom = &before;
     }
     State<T> getBefore() {
-        return this->cameFrom;
+        return *(this->cameFrom);
     }
-    bool operator < (const State<T>& s) {
-        return this->compareCost < s.compareCost;
+    friend bool operator< (const State<T>& s, const State<T>& d) {
+        return s.compareCost < d.compareCost;
     }
-    bool operator > (const State<T>& s) {
-        return this->compareCost > s.compareCost;
+    friend bool operator> (const State<T>& s, const State<T>& d) {
+        return s.compareCost > d.compareCost;
     }
 };
 template <class T>
 class Searchable {
-
+public:
     virtual State<T> getInitialState() = 0;
     virtual State<T> getGoalState() = 0;
     // set the parent when adding to the list

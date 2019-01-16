@@ -23,21 +23,21 @@ protected:
         State<T> top = StateQueue.getTop();
         return top;
     }
-    Solution<State<T>> getWay(Searchable<T> searchable) {
+    Solution<State<T>>* getWay(Searchable<T>* searchable) {
         std::vector<State<T>> way;
         std::vector<State<T>> solutions;
-        State<T> goal = searchable.getGoalState();
-        State<T> init = searchable.getInitialState();
+        State<T> goal = searchable->getGoalState();
+        State<T> init = searchable->getInitialState();
         State<T> temp = goal;
-        while (temp != init) {
+        while (not (temp == init)) {
             way.push_back(temp);
             temp = temp.getBefore();
         }
         way.push_back(init);
-        for(auto it = way.end; it != way.begin(); --it) {
+        for(auto it = way.end(); it != way.begin(); --it) {
             solutions.push_back(*it);
         }
-        SearchSolution<State<Point>> solution = SearchSolution<State<T>>(solutions);
+        auto * solution = new SearchSolution<T>(solutions);
         return solution;
     }
 
@@ -51,7 +51,7 @@ public:
     }
 
 // the search method
-    virtual Solution<T> search (Searchable<T> searchable) = 0;
+    virtual Solution<State<T>>* search (Searchable<T>* searchable) = 0;
 // get how many nodes were evaluated by the algorithm
     virtual int getNumberOfNodesEvaluated() {
         return this->nodes;

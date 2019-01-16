@@ -14,14 +14,13 @@
 
 template <class T, class P, class S>
 class Searcher : public Solver<P, S> {
-    virtual Solution<State<T>> solve(P p) {
-        Searchable<T>* searchable = MatrixSearch(p);
-        return search(searchable);
+    virtual S* solve(P* p) {
+        return search(p);
     }
     // the search method
-    Solution<State<T>> search (Searchable<T> searchable);
+    virtual Solution<State<T>>* search (Searchable<T>* searchable) = 0;
 // get how many nodes were evaluated by the algorithm
-    int getNumberOfNodesEvaluated();
+    virtual int getNumberOfNodesEvaluated() = 0;
 
 
 };

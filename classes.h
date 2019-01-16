@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <fstream>
 #include "Searchable.h"
+#include "MatrixSearch.h"
 
 using namespace std;
 namespace server_side {
@@ -42,7 +43,7 @@ using namespace server_side;
 
 template <class Problem, class Solution> class Solver {
 public:
-    virtual Solution& solve(Problem prob) = 0;
+    virtual Solution* solve(Problem* prob) = 0;
 
 };
 
@@ -52,12 +53,12 @@ template <class Problem, class Solution> class CacheManager {
 
 public:
     virtual bool hasSolution(Problem* prob) = 0;
-    virtual Solution* getSolution(Problem* prob) = 0;
-    virtual void saveSolution(Problem* prob, Solution* solu) = 0;
+    virtual string getSolution(Problem* prob) = 0;
+    virtual void saveSolution(Problem* prob, string solu) = 0;
 
 };
 
-template <class Problem, class Solution>class FileCacheManeger : public CacheManager<Problem, Solution> {
+template <class Problem, class Solution>class FileCacheManager : public CacheManager<Problem, Solution> {
 public:
     virtual bool hasSolution(Problem* prob) {
         hash<string> str_hash;
@@ -66,18 +67,22 @@ public:
         return (stat(filename.c_str(), &buffer) == 0);
 
     }
-    virtual Solution* getSolution(Problem* prob) {
+    virtual string getSolution(Problem* prob) {
         hash<string> str_hash;
         string filename = to_string(str_hash(prob->toString()));
-
-        Solution* solu = new Solution();
-        solu->fromFile(filename);
-        return solu;
+        fstream file(filename);
+        string line;
+        string result;
+        while (getline(file, line)) {
+            result += line;
+        }
+        return result;
     }
-    virtual void saveSolution(Problem* prob, Solution* solu){
+    virtual void saveSolution(Problem* prob, string solu){
         hash<string> str_hash;
         string filename = to_string(str_hash(prob->toString()));
-        solu->toFile(filename);
+        fstream file(filename);
+        file << solu;
 
     }
 
@@ -99,7 +104,6 @@ public:
         vector<string> Points;
         vector<vector<string>> vec;
         vector<vector<string>> vec2;
-        Solution* solu;
         while (true) {
             bzero(buffer,256);
             n = read( socket,buffer,255 );
@@ -122,8 +126,8 @@ public:
                 for (int i = 0; i < vec.size() - 2; i++) {
                     vec2.emplace_back(vec[i]);
                 }
-                solu = solver->solve(vec2);
-                string s = StringSolution(solu);
+                MatrixSearch* matrix = new MatrixSearch(vec2);
+                string s = StringSolution(solver->solve(matrix));
                 n = write(socket,s.c_str(),s.length());
                 if (n < 0) {
                     perror("ERROR writing to socket");
@@ -152,21 +156,21 @@ private:
         }
         return vec;
     }
-    string StringSolution(Solution solu) {
+    string StringSolution(Solution* solu) {
         std::vector<std::string> s;
         string result;
-        State<T> init = solu[0];
-        auto it = solu.begin();
+        State<T> init = solu->getSolution()[0];
+        auto it = solu->getSolution().begin();
         it++;
-        for(; it != solu.end(); ++it) {
+        for(; it != solu->getSolution().end(); ++it) {
             State<T> temp = *(it--);
-            if (*it.getX() > init.getX()) {
+            if ((*it).getX() > init.getX()) {
                 s.push_back("Right");
-            } else if (*it.getX() < init.getX()) {
+            } else if ((*it).getX() < init.getX()) {
                 s.push_back("Left");
-            } else if (*it.getY() > init.getY()) {
+            } else if ((*it).getY() > init.getY()) {
                 s.push_back("Down");
-            } else if (*it.getY() < init.getY()) {
+            } else if ((*it).getY() < init.getY()) {
                 s.push_back("Up");
             }
         }

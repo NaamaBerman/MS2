@@ -1,6 +1,10 @@
 #include <iostream>
+#include "parallel_server.h"
+#include "classes.h"
+#include "Solution.h"
+#include "AStarSearch.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+    Solver<Solution<Point>, vector<vector<string>>>* solver = new AStarSearch<Point>
+
 }

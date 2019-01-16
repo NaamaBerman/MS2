@@ -25,25 +25,7 @@ public:
     std::vector<State<T>> getSolution() {
         return this->solution;
     }
-    std::vector<std::string> StringSolution() {
-        std::vector<std::string> s;
-        State<T> init = this->solution[0];
-        auto it = this->solution.begin();
-        it++;
-        for(; it != this->solution.end(); ++it) {
-            State<T> temp = *(it--);
-            if (*it.getX() > init.getX()) {
-                s.push_back("Right");
-            } else if (*it.getX() < init.getX()) {
-                s.push_back("Left");
-            } else if (*it.getY() > init.getY()) {
-                s.push_back("Down");
-            } else if (*it.getY() < init.getY()) {
-                s.push_back("Up");
-            }
-        }
-        return s;
-    }
+
 };
 
 

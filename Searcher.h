@@ -8,9 +8,14 @@
 
 #include "Searchable.h"
 #include "Solution.h"
-#include "classes.h"
+//#include "classes.h"
 #include "MatrixSearch.h"
 
+template <class Problem, class Solution> class Solver {
+public:
+    virtual Solution* solve(Problem* prob) = 0;
+
+};
 
 template <class T, class P, class S>
 class Searcher : public Solver<P, S> {

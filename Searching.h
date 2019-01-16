@@ -9,6 +9,7 @@
 #include "Searcher.h"
 #include "PriorityQueue.h"
 #include <queue>
+#include <set>
 
 
 template <class T, class P, class S>
@@ -23,11 +24,9 @@ protected:
         State<T> top = StateQueue.getTop();
         return top;
     }
-    Solution<State<T>>* getWay(Searchable<T>* searchable) {
+    Solution<State<T>>* getWay(State<T>& init, State<T>& goal) {
         std::vector<State<T>> way;
         std::vector<State<T>> solutions;
-        State<T> goal = searchable->getGoalState();
-        State<T> init = searchable->getInitialState();
         State<T> temp = goal;
         while (not (temp == init)) {
             way.push_back(temp);

@@ -12,6 +12,6 @@ int main() {
     ClientHandler* cl =
             new MyTestClientHandler<Searchable<Point>, Solution<State<Point>>, Point>(solver, cm);
     MyParallelServer parallelServer(5);
-    parallelServer.open(5400, cl);
+    parallelServer.open(int(argv[1]), cl);
 
 }

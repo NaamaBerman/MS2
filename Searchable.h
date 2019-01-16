@@ -6,6 +6,7 @@
 #define STONE2_SEARCHABLE_H
 #include <list>
 #include <string>
+#include <iostream>
 
 class Point {
     int x;
@@ -23,9 +24,9 @@ public:
         this->x = 0;
         this->y = 0;
     }
-    bool operator == (const Point& p) {
-        if (this->x == p.x) {
-            if (this->y == p.y) {
+    friend bool operator == (const Point& p,const Point& d) {
+        if (d.x == p.x) {
+            if (d.y == p.y) {
                 return true;
             }
         }
@@ -47,7 +48,7 @@ template <class T> class State {
     // cost to reach this state (set by a setter)
     double cost;
     // the state we came from to this state (setter)
-    State<T>* cameFrom;
+    State<T>* cameFrom = nullptr;
     double totalCost;
     double compareCost;
 public:
@@ -58,6 +59,12 @@ public:
     State(const State<T>& in) {
         this->state = in.state;
         this->cost = in.cost;
+        this->compareCost = in.compareCost;
+        this->totalCost = in.totalCost;
+        this->cameFrom = in.cameFrom;
+        if (cameFrom == nullptr)
+            return ;
+        std::cout << cost << " father is " <<  cameFrom->cost << std::endl;
     }
 
     int getX() {
@@ -67,8 +74,8 @@ public:
         return state.getY();
     }
     ///////////////
-    bool operator == (const State<T>& s) {
-        return (this->state == s.state);
+    friend bool operator == (const State<T>& s, const State<T>& d) {
+        return (d.state == s.state);
     }
     void setCost(double c) {
         this->cost = c;

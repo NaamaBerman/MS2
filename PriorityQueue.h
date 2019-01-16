@@ -46,21 +46,19 @@ public:
         return this->queue.size();
     }
     bool contains(S var) {
-        int i = 0;
-        int index = -1;
-        for(auto it = queue.begin(); it != queue.end(); ++it) {
-            if (*it == var) {
-                index = i;
+        for(auto &it : queue) {
+            if (it == var) {
+                return true;
             }
-            i++;
         }
-        return index != -1;
+        return false;
     }
 
     void getOut(S var) {
         for(auto it = queue.begin(); it != queue.end(); ++it) {
             if (*it == var) {
                 this->queue.erase(it);
+                return;
             }
         }
 

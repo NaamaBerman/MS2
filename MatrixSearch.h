@@ -39,10 +39,10 @@ public:
         int row = 0;
         int column = 0;
         for(; vec != s.end(); vec++) {
+            this->states.push_back(std::vector<State<Point>>());
             for(auto &item : *vec) {
                 //State<Point> current(fromStringToState(row, column, *iter);
                 auto tmp = fromStringToState(row, column, item);
-                this->states.push_back(std::vector<State<Point>>());
                 this->states[row].push_back(tmp);
                 column++;
             }
@@ -63,13 +63,11 @@ public:
         return result;
 
     }
-    virtual State<Point> getInitialState() {
-        State<Point> initial = this->states[this->startX][this->startY];
-        return initial;
+    virtual State<Point>& getInitialState() {
+        return this->states.at(this->startX).at(this->startY);
     }
-    virtual State<Point> getGoalState() {
-        State<Point> goal = this->states[this->endX][this->endY];
-        return goal;
+    virtual State<Point>& getGoalState() {
+        return this->states.at(this->endX).at(this->endY);
     }
 
     virtual std::list<State<Point>> getAllPossibleStates(State<Point> s) {
@@ -89,7 +87,7 @@ public:
                     possible.push_back(temp2);
 
                 }
-            } else if (row == matSize) {
+            } else if (row == matSize - 1) {
                 State<Point> temp1 = this->states[row][column + 1];
                 if (temp1.getCost() != -1) {
                     possible.push_back(temp1);
@@ -119,7 +117,7 @@ public:
                 }
 
             }
-        } else if (column == matSize) {
+        } else if (column == matSize - 1) {
             if (row == 0) {
                 State<Point> temp1 = this->states[row][column - 1];
                 if (temp1.getCost() != -1) {
@@ -131,7 +129,7 @@ public:
                     possible.push_back(temp2);
 
                 }
-            } else if (row == matSize) {
+            } else if (row == matSize - 1) {
                 State<Point> temp1 = this->states[row][column - 1];
                 if (temp1.getCost() != -1) {
                     possible.push_back(temp1);
@@ -177,7 +175,7 @@ public:
 
             }
 
-        } else if (row == matSize) {
+        } else if (row == matSize - 1) {
             State<Point> temp1 = this->states[row][column + 1];
             if (temp1.getCost() != -1) {
                 possible.push_back(temp1);

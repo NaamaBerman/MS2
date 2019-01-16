@@ -99,6 +99,7 @@ public:
     virtual void handleClient(int socket) {
         char buffer[256];
         int n;
+        string s;
         vector<string> startPoint;
         vector<string> endPoint;
         vector<string> Points;
@@ -136,9 +137,16 @@ public:
                 for (int i = 0; i < vec.size() - 2; i++) {
                     vec2.push_back(vec[i]);
                 }
-                //MatrixSearch* matrix = new MatrixSearch(vec2);
-                //string s = StringSolution(solver->solve(matrix));
-                //n = write(socket,s.c_str(),s.length());
+                /*if (cm->hasSolution(&vec2)) {
+                    s = cm->getSolution(&vec2);
+                } else {
+                    MatrixSearch* matrix = new MatrixSearch(vec2);
+                    s = StringSolution(solver->solve(matrix));
+                    cm->saveSolution(&vec2, &s);
+                }*/
+
+
+                n = write(socket,s.c_str(),s.length());
                 if (n < 0) {
                     perror("ERROR writing to socket");
                     exit(1);
@@ -150,6 +158,7 @@ public:
                     }
                     cout << "yey" << endl;
                 }
+                
                 break;
             }
 

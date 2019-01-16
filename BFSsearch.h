@@ -9,8 +9,8 @@
 #include "Searcher.h"
 #include "Searching.h"
 
-template <class T>
-class BFSsearch : public Searching<T>{
+template <class T, class P, class S>
+class BFSsearch : public Searching<T, P , S>{
 
 public:
     // the search method
@@ -19,8 +19,8 @@ public:
     virtual int getNumberOfNodesEvaluated();
 };
 
-template<class T>
-Solution<State<T>> BFSsearch<T>::search(Searchable<T> searchable) {
+template <class T, class P, class S>
+Solution<State<T>> BFSsearch<T, P, S>::search(Searchable<T> searchable) {
     State<T> initial = searchable.getInitialState();
     std::queue<T> q;
     q.push(initial);

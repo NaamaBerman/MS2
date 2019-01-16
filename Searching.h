@@ -11,8 +11,8 @@
 #include <queue>
 
 
-template <class T>
-class Searching : public Searcher<T> {
+template <class T, class P, class S>
+class Searching : public Searcher<T, P, S> {
 protected:
     ////
     PriorityQueue<State<T>> StateQueue;

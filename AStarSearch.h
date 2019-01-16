@@ -9,8 +9,8 @@
 #include "Searcher.h"
 #include "Searching.h"
 
-template <class T>
-class AStarSearch : public Searching<T> {
+template <class T, class P, class S>
+class AStarSearch : public Searching<T, P, S> {
     int Heuristic(State<T> s, State<T> goal);
 public:
     // the search method
@@ -20,14 +20,14 @@ public:
 
 };
 
-template<class T>
-int AStarSearch<T>::Heuristic(State<T> s, State<T> goal) {
+template <class T, class P, class S>
+int AStarSearch<T, P, S>::Heuristic(State<T> s, State<T> goal) {
     int n = abs(goal.getX() - s.getX()) + abs(goal.getY() - s.getY());
     return n;
 }
 
 template<class T>
-Solution<State<T>> AStarSearch<T>::search(Searchable<T> searchable) {
+Solution<State<T>> AStarSearch<T, P, S>::search(Searchable<T> searchable) {
     State<T> goal = searchable.getGoalState();
     State<T> initial = searchable.getInitialState();
     this->StateQueue.add(initial);

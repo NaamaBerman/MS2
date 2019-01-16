@@ -8,10 +8,16 @@
 
 #include "Searchable.h"
 #include "Solution.h"
+#include "classes.h"
+#include "MatrixSearch.h"
 
 
-template <class T>
-class Searcher {
+template <class T, class P, class S>
+class Searcher : public Solver<P, S> {
+    virtual Solution<State<T>> solve(P p) {
+        Searchable<T>* searchable = MatrixSearch(p);
+        return search(searchable);
+    }
     // the search method
     Solution<State<T>> search (Searchable<T> searchable);
 // get how many nodes were evaluated by the algorithm

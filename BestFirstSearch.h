@@ -9,8 +9,8 @@
 #include "Searcher.h"
 #include "Searching.h"
 
-template <class T>
-class BestFirstSearch : public Searching<T> {
+template <class T, class P, class S>
+class BestFirstSearch : public Searching<T, P, S> {
 
 public:
     // the search method
@@ -19,8 +19,8 @@ public:
     virtual int getNumberOfNodesEvaluated();
 };
 
-template<class T>
-Solution<State<T>> BestFirstSearch<T>::search(Searchable<T> searchable) {
+template <class T, class P, class S>
+Solution<State<T>> BestFirstSearch<T, P, S>::search(Searchable<T> searchable) {
     State<T> goal = searchable.getGoalState();
     State<T> initial = searchable.getInitialState();
     this->StateQueue.add(initial);

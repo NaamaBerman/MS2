@@ -3,7 +3,10 @@
 #include <fstream>
 #include "serial_server.h"
 #include "parallel_server.h"
+void task() {
+    cout<<"hi" << endl;
 
+}
 int main() {
     /*hash<string> h;
 
@@ -99,7 +102,9 @@ int main() {
 
         }
     });
+
     delete pool;*/
+    //ThreadPool pool(6);
     Problem pro("abc");
     Solution sol;
     FileCacheManeger<Problem, Solution>* fcm;

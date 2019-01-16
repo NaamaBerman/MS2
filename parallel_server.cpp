@@ -11,7 +11,7 @@ void ThreadPool::start(int num_of_threads) {
     for (int i = 0; i < num_of_threads; i++) {
         mThreads.emplace_back([=](){
             while (true) {
-                Task task;
+                Task* task;
                 {
                     std::unique_lock<std::mutex> lock(mEventMutex);
                     mEventVar.wait(lock, [=]() {
@@ -20,10 +20,10 @@ void ThreadPool::start(int num_of_threads) {
                     if (mStopping && mTask.empty()) {
                         break;
                     }
-                    task = std::move(mTask.front());
+                    task = mTask.front();
                     mTask.pop();
                 }
-                task();
+                task->task();
 
 
             }
@@ -70,55 +70,14 @@ void MyParallelServer::openSocket(int port) {
 
 void MyParallelServer::open(int port, ClientHandler *c) {
     openSocket(port);
+    Task* timeout = new MyTimeOut(this->pool, this);
     for (int i = 0; i < numOfThreads - 1; i++) {
-        pool->enqueue([&] () mutable {
-            while (true) {
-                int x;
-                //cout << "1" << endl;
-                cin >> x;
-                //b = true;
-                counter++;
-                clientArrived = true;
-                pool->mEventVar.notify_one();
-                int y;
-                cin >> y;
-                clientLeft = true;
-                counter--;
-                pool->mEventVar.notify_one();
-            }
-
-
-        });
+        pool->enqueue(new Func(pool, this, c));
 
     }
 
 
-    auto listen = pool->enqueue([&] () mutable {
-        while (true) {
-            {
-                std::unique_lock<std::mutex> lock(pool->mEventMutex);
-                if(pool->mEventVar.wait_for(lock,chrono::seconds(5 > starter ? 5 : starter), [=]() {
-                    return clientArrived;
-                })) {
-                    cout << "client arrived" << endl;
-                    clientArrived = false;
-                    pool->mEventVar.wait(lock, [&]() {
-                        return clientLeft && (counter == 0);
-                    });
-                    cout << "client left" << endl;
-                    clientLeft = false;
-
-                } else {
-                    cout << "time out" << endl;
-                    delete pool;
-                    close(sockfd);
-                    exit(0);
-                }
-                starter = 5;
-            }
-
-        }
-    });
+    pool->enqueue(timeout);
 }
 void MyParallelServer::stop() {
     delete pool;

@@ -17,7 +17,7 @@
 #include <errno.h>
 #include <cstdlib>
 #include <string.h>
-
+#include <vector>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <fstream>
@@ -93,24 +93,46 @@ public:
     virtual void handleClient(int socket) {
         char buffer[256];
         int n;
-        bzero(buffer,256);
+        vector<vector<string>> vec;
+        while (true) {
+            bzero(buffer,256);
+            n = read( socket,buffer,255 );
 
-        n = read( socket,buffer,255 );
+            if (n < 0) {
+                perror("ERROR reading from socket");
+                exit(1);
+            }
+            string str(buffer);
+            vec.emplace_back(splitBy(str, ','));
+            printf("Here is the message: %s\n",buffer);
+            if (strcmp(buffer, "end") == 0) {
+                break;
+            }
 
-        if (n < 0) {
-            perror("ERROR reading from socket");
-            exit(1);
+            /* Write a response to the client */
+            n = write(socket,"I got your message",18);
+
+            if (n < 0) {
+                perror("ERROR writing to socket");
+                exit(1);
+            }
         }
 
-        printf("Here is the message: %s\n",buffer);
+    }
 
-        /* Write a response to the client */
-        n = write(socket,"I got your message",18);
-
-        if (n < 0) {
-            perror("ERROR writing to socket");
-            exit(1);
+private:
+    vector<string> splitBy (string str, char c) {
+        string acc;
+        vector<string> vec;
+        for (int i = 0; i < str.length(); i++) {
+            if (str[i] != c) {
+                acc+=str[i];
+            } else {
+               vec.emplace_back(acc);
+               acc = "";
+            }
         }
+        return vec;
     }
 
 };

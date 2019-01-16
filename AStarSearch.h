@@ -26,7 +26,7 @@ int AStarSearch<T, P, S>::Heuristic(State<T> s, State<T> goal) {
     return n;
 }
 
-template<class T>
+template <class T, class P, class S>
 Solution<State<T>> AStarSearch<T, P, S>::search(Searchable<T> searchable) {
     State<T> goal = searchable.getGoalState();
     State<T> initial = searchable.getInitialState();

@@ -21,6 +21,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <fstream>
+#include "Searchable.h"
 
 using namespace std;
 namespace server_side {
@@ -82,7 +83,7 @@ public:
 
 };
 
-template <class Problem, class Solution> class MyTestClientHandler : public ClientHandler {
+template <class Problem, class Solution, class T> class MyTestClientHandler : public ClientHandler {
     Solver<Problem, Solution>* solver;
     CacheManager<Problem, Solution>* cm;
 public:
@@ -93,7 +94,12 @@ public:
     virtual void handleClient(int socket) {
         char buffer[256];
         int n;
+        vector<string> startPoint;
+        vector<string> endPoint;
+        vector<string> Points;
         vector<vector<string>> vec;
+        vector<vector<string>> vec2;
+        Solution* solu;
         while (true) {
             bzero(buffer,256);
             n = read( socket,buffer,255 );
@@ -106,16 +112,28 @@ public:
             vec.emplace_back(splitBy(str, ','));
             printf("Here is the message: %s\n",buffer);
             if (strcmp(buffer, "end") == 0) {
+                endPoint = vec[vec.size() - 1];
+                startPoint = vec[vec.size() - 2];
+                Points.emplace_back(startPoint[0]);
+                Points.emplace_back(startPoint[1]);
+                Points.emplace_back(endPoint[0]);
+                Points.emplace_back(endPoint[1]);
+                vec2.emplace_back(Points);
+                for (int i = 0; i < vec.size() - 2; i++) {
+                    vec2.emplace_back(vec[i]);
+                }
+                solu = solver->solve(vec2);
+                string s = StringSolution(solu);
+                n = write(socket,s.c_str(),s.length());
+                if (n < 0) {
+                    perror("ERROR writing to socket");
+                    exit(1);
+                }
                 break;
             }
 
-            /* Write a response to the client */
-            n = write(socket,"I got your message",18);
 
-            if (n < 0) {
-                perror("ERROR writing to socket");
-                exit(1);
-            }
+
         }
 
     }
@@ -134,58 +152,40 @@ private:
         }
         return vec;
     }
+    string StringSolution(Solution solu) {
+        std::vector<std::string> s;
+        string result;
+        State<T> init = solu[0];
+        auto it = solu.begin();
+        it++;
+        for(; it != solu.end(); ++it) {
+            State<T> temp = *(it--);
+            if (*it.getX() > init.getX()) {
+                s.push_back("Right");
+            } else if (*it.getX() < init.getX()) {
+                s.push_back("Left");
+            } else if (*it.getY() > init.getY()) {
+                s.push_back("Down");
+            } else if (*it.getY() < init.getY()) {
+                s.push_back("Up");
+            }
+        }
+        for (int i = 0; i < s.size(); i++) {
+            if (i == s.size() - 1) {
+                result += s[i];
+                result += "\r\n";
+            } else {
+                result += s[i];
+                result += ", ";
+            }
 
-};
-
-
-class Problem {
-    string str;
-public:
-    Problem(string str) {
-        this->str = str;
-    }
-    string toString() {
-        return str;
-    }
-};
-class Solution {
-    string solu;
-public:
-    Solution() {
-        solu = "";
-    }
-    Solution(string str) {
-        solu = str;
-    }
-    void toFile(string file_name) {
-        fstream f;
-        f.open(file_name);
-        f << solu;
-        f.close();
-
-
-    }
-    void fromFile(string file_name) {
-        fstream f;
-        f.open(file_name);
-        f >> solu;
-        f.close();
-    }
-};
-
-template <class Problem, class Solution > class StringR : public Solver<Problem, Solution> {
-public:
-    virtual Solution& solve(Problem prob) {
-        string str = prob.toString();
-        string result = str += "hi";
-        Solution solu(result);
-        return solu;
-
-
-
+        }
+        return result;
     }
 
 };
+
+
 
 
 

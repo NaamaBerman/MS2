@@ -32,7 +32,7 @@ public:
     std::vector<State<T>> getSolution() {
         return this->solution;
     }
-    
+
 };
 
 

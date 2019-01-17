@@ -42,6 +42,17 @@ public:
         getOut(top);
         return top;
     }
+
+    S getFirst() {
+        S first = this->queue[0];
+        getOut(first);
+        return first;
+    }
+    S getLast() {
+        S last = this->queue[this->queue.size() - 1];
+        getOut(last);
+        return last;
+    }
     int getSize() {
         return this->queue.size();
     }

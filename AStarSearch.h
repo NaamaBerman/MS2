@@ -12,14 +12,6 @@
 template <class T, class P, class S>
 class AStarSearch : public Searching<T, P, S> {
     int Heuristic(State<T> s, State<T> goal);
-    bool searchSet(std::set<State<T>> &set1, State<T> in) {
-        for (auto &item: set1) {
-            if (item == in) {
-                return true;
-            }
-        }
-        return false;
-    }
 public:
     // the search method
     virtual Solution<State<T>>* search (Searchable<T>* searchable);
@@ -47,11 +39,11 @@ Solution<State<T>>* AStarSearch<T, P, S>::search(Searchable<T>* searchable) {
         }
         std::list<State<T>> possible = searchable->getAllPossibleStates(current);
         for (State<T> temp : possible) {
-            if (searchSet(close, temp)) continue;
+            if (this->searchSet(close, temp)) continue;
             temp.setCompCost(current.getTotalCost()+temp.getCost() + this->Heuristic(temp, goal));
             double total = current.getTotalCost() + temp.getCost();
             temp.setTotalCost(total);
-            if ((not searchSet(close, temp)) and (not this->StateQueue.contains(temp))) {
+            if ((not this->searchSet(close, temp)) and (not this->StateQueue.contains(temp))) {
                 temp.setBefore(current);
                 this->StateQueue.add(temp);
             } else if (current.getTotalCost() + temp.getCost() < temp.getTotalCost()) {

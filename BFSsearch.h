@@ -16,29 +16,35 @@ public:
     // the search method
     virtual Solution<State<T>>* search (Searchable<T>* searchable);
 // get how many nodes were evaluated by the algorithm
-    virtual int getNumberOfNodesEvaluated();
 };
 
 template <class T, class P, class S>
 Solution<State<T>>* BFSsearch<T, P, S>::search(Searchable<T>* searchable) {
     State<T> initial = searchable->getInitialState();
-    std::queue<T> q;
-    q.push(initial);
+    State<T> goal = searchable->getGoalState();
+    initial.setTotalCost(initial.getCost());
+    initial.setCompCost(initial.getCost());
+    this->StateQueue.add(initial);
     std::set<State<T>> used;
     used.insert(initial);
-    while (q.size() > 0) {
-        State<T> current = q.back();
-        q.pop();
+    while (this->StateQueue.getSize() > 0) {
+        State<T> current = this->popFirst();
+        if (current == goal) {
+            goal = current;
+        }
         std::list<State<T>> possible = searchable->getAllPossibleStates(current);
         for (State<T> temp : possible) {
-            if ((used.find(temp) == used.end())) {
-                q.push(temp);
+            if (!this->searchSet(used, temp)) {
+                double total = current.getTotalCost() + temp.getCost();
+                temp.setTotalCost(total);
+                temp.setCompCost(current.getTotalCost()+temp.getCost());
                 temp.setBefore(current);
+                this->StateQueue.add(temp);
                 used.insert(temp);
             }
         }
     }
-    return this->getWay(searchable);
+    return this->getWay(initial, goal);
 
 
 }

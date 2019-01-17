@@ -10,6 +10,7 @@
 #include "PriorityQueue.h"
 #include <queue>
 #include <set>
+#include <algorithm>
 
 
 template <class T, class P, class S>
@@ -24,20 +25,37 @@ protected:
         State<T> top = StateQueue.getTop();
         return top;
     }
+    State<T> popFirst()
+    {
+        nodes++;
+        State<T> first = StateQueue.getFirst();
+        return first;
+    }
+    State<T> popLast()
+    {
+        nodes++;
+        State<T> first = StateQueue.getLast();
+        return first;
+    }
     Solution<State<T>>* getWay(State<T>& init, State<T>& goal) {
         std::vector<State<T>> way;
-        std::vector<State<T>> solutions;
         State<T> temp = goal;
         while (not (temp == init)) {
             way.push_back(temp);
             temp = temp.getBefore();
         }
         way.push_back(init);
-        for(auto it = way.end(); it != way.begin(); --it) {
-            solutions.push_back(*it);
-        }
-        auto * solution = new SearchSolution<T>(solutions);
+        std::reverse(way.begin(), way.end());
+        auto * solution = new SearchSolution<T>(way);
         return solution;
+    }
+    bool searchSet(std::set<State<T>> &set1, State<T> in) {
+        for (auto &item: set1) {
+            if (item == in) {
+                return true;
+            }
+        }
+        return false;
     }
 
 

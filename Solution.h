@@ -23,6 +23,11 @@ public:
     SearchSolution(std::vector<State<T>> s) {
         this->solution = s;
     }
+    ~SearchSolution() {
+        for(auto it = solution.begin(); it != solution.end(); ++it) {
+            delete(*it);
+        }
+    }
 
     std::vector<State<T>> getSolution() {
         return this->solution;

@@ -55,6 +55,11 @@ public:
     State(const T& state) {
         this->state = state;
     }
+    ~State() {
+        if (this->cameFrom != nullptr) {
+            //delete(this->cameFrom);
+        }
+    }
 
     State(const State<T>& in) {
         this->state = in.state;
@@ -62,9 +67,6 @@ public:
         this->compareCost = in.compareCost;
         this->totalCost = in.totalCost;
         this->cameFrom = in.cameFrom;
-        if (cameFrom == nullptr)
-            return ;
-        std::cout << cost << " father is " <<  cameFrom->cost << std::endl;
     }
 
     int getX() {
@@ -97,7 +99,7 @@ public:
         return this->compareCost;
     }
     void setBefore(State<T>& before) {
-        this->cameFrom = &before;
+        this->cameFrom = new State<T>(before);
     }
     State<T> getBefore() {
         return *(this->cameFrom);

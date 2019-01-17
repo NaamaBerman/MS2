@@ -10,17 +10,15 @@
 #include "Solution.h"
 //#include "classes.h"
 #include "MatrixSearch.h"
+#include "classes.h"
 
-template <class Problem, class Solution> class Solver {
-public:
-    virtual Solution* solve(Problem* prob) = 0;
 
-};
 
 template <class T, class P, class S>
 class Searcher : public Solver<P, S> {
     virtual S* solve(P* p) {
-        return search(p);
+        S* s = search(p);
+        return s;
     }
     // the search method
     virtual Solution<State<T>>* search (Searchable<T>* searchable) = 0;

@@ -165,7 +165,7 @@ public:
                     }
                     cout << "yey" << endl;
                 }*/
-
+                delete matrix;
                 break;
             }
 
@@ -199,21 +199,21 @@ private:
     string StringSolution(Solution* solu) {
         std::vector<std::string> s;
         string result;
-        State<T> init = solu->getSolution()[0];
-        auto it = solu->getSolution().begin();
-        it++;
-        for(; it != solu->getSolution().end(); ++it) {
-            State<T> temp = *(it--);
-            if ((*it).getX() > init.getX()) {
+
+        for(int j = 1; j < solu->getSolution().size(); j++) {
+
+            if (solu->getSolution()[j].getX() > solu->getSolution()[j-1].getX()) {
                 s.push_back("Right");
-            } else if ((*it).getX() < init.getX()) {
+            } else if (solu->getSolution()[j].getX() < solu->getSolution()[j-1].getX()) {
                 s.push_back("Left");
-            } else if ((*it).getY() > init.getY()) {
+            } else if (solu->getSolution()[j].getY() > solu->getSolution()[j-1].getY()) {
                 s.push_back("Down");
-            } else if ((*it).getY() < init.getY()) {
+            } else if (solu->getSolution()[j].getY() < solu->getSolution()[j-1].getY()) {
                 s.push_back("Up");
             }
+
         }
+
         for (int i = 0; i < s.size(); i++) {
             if (i == s.size() - 1) {
                 result += s[i];

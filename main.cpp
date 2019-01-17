@@ -3,6 +3,9 @@
 #include "classes.h"
 #include "Solution.h"
 #include "AStarSearch.h"
+#include "BestFirstSearch.h"
+#include "DFSsearch.h"
+#include "BFSsearch.h"
 
 int main(int argc, char *argv[]) {
     Solver<Searchable<Point>, Solution<State<Point>>>* solver =
@@ -12,8 +15,9 @@ int main(int argc, char *argv[]) {
     ClientHandler* cl =
             new MyTestClientHandler<Searchable<Point>, Solution<State<Point>>, Point>(solver, cm);
     MyParallelServer parallelServer(5);
-    int port = atoi(argv[1]);
-    parallelServer.open(port, cl);
+    //int port = atoi(argv[1]);
+    parallelServer.open(5400, cl);
+
     return 0;
 
 

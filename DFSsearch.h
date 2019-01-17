@@ -50,6 +50,7 @@ Solution<State<T>>* DFSsearch<T, P, S>::search(Searchable<T>* searchable) {
 }
 
 
+
 #endif //STONE2_DFSSEARCH_H
 
 

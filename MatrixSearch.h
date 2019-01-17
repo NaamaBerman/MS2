@@ -51,7 +51,6 @@ public:
             row++;
         }
         matSize = row;
-
     }
 
     virtual std::string toString() {

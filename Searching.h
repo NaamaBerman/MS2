@@ -58,7 +58,6 @@ protected:
         return false;
     }
 
-
 public:
     Searching() {
         nodes = 0;

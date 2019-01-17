@@ -27,7 +27,6 @@ class Searcher : public Solver<P, S> {
 // get how many nodes were evaluated by the algorithm
     virtual int getNumberOfNodesEvaluated() = 0;
 
-
 };
 
 

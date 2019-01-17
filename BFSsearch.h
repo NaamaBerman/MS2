@@ -50,4 +50,5 @@ Solution<State<T>>* BFSsearch<T, P, S>::search(Searchable<T>* searchable) {
 }
 
 
+
 #endif //STONE2_BFSSEARCH_H

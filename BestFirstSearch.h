@@ -64,8 +64,6 @@ Solution<State<T>>* BestFirstSearch<T, P, S>::search(Searchable<T>* searchable) 
 
 
 
-////////////////////////////////////////////////
-
 
 
 

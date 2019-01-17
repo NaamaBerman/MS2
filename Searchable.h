@@ -8,6 +8,7 @@
 #include <string>
 #include <iostream>
 
+
 class Point {
     int x;
     int y;

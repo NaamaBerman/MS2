@@ -67,4 +67,5 @@ Solution<State<T>>* AStarSearch<T, P, S>::search(Searchable<T>* searchable) {
     }
 }
 
+
 #endif //STONE2_ASTARSEARCH_H

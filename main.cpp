@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
     ClientHandler* cl =
             new MyTestClientHandler<Searchable<Point>, Solution<State<Point>>, Point>(solver, cm);
     MyParallelServer parallelServer(5);
-    //int port = atoi(argv[1]);
-    parallelServer.open(5400, cl);
+    int port = atoi(argv[1]);
+    parallelServer.open(port, cl);
 
     return 0;
 

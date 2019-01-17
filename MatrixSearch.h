@@ -8,7 +8,6 @@
 
 #include <vector>
 #include <string>
-#include <iostream>
 #include "Searchable.h"
 
 class MatrixSearch : public Searchable<Point> {
@@ -51,13 +50,14 @@ public:
             row++;
         }
         matSize = row;
+
     }
 
     virtual std::string toString() {
         std::string result;
-        for(auto &vec : asString) {
-            for(auto &item : vec) {
-                result += item + ",";
+        for(std::vector<std::string> vec : asString) {
+            for(std::string s : vec) {
+                result += "," + s;
             }
         }
         return result;

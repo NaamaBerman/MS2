@@ -55,9 +55,9 @@ public:
 
     virtual std::string toString() {
         std::string result;
-        for(auto it = asString.begin(); it != asString.end(); it++) {
-            for(auto iter = (*it).begin(); iter != (*it).end(); it++) {
-                result += *iter + ",";
+        for(std::vector<std::string> vec : asString) {
+            for(std::string s : vec) {
+                result += "," + s;
             }
         }
         return result;

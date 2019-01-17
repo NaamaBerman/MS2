@@ -135,7 +135,7 @@ public:
 
                 } else {
                     cout << "time out" << endl;
-                    delete pool;
+                    //delete pool;
                     close(server->sockfd);
                     exit(0);
                 }

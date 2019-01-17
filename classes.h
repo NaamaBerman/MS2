@@ -62,6 +62,7 @@ template <class Problem, class Solution>class FileCacheManager : public CacheMan
 public:
     virtual bool hasSolution(Problem* prob) {
         hash<string> str_hash;
+        string s = prob->toString();
         string filename = to_string(str_hash(prob->toString()));
         struct stat buffer;
         return (stat(filename.c_str(), &buffer) == 0);
@@ -70,19 +71,22 @@ public:
     virtual string getSolution(Problem* prob) {
         hash<string> str_hash;
         string filename = to_string(str_hash(prob->toString()));
-        fstream file(filename);
+        ifstream file(filename);
         string line;
         string result;
         while (getline(file, line)) {
             result += line;
         }
+        file.close();
         return result;
     }
     virtual void saveSolution(Problem* prob, string solu){
         hash<string> str_hash;
         string filename = to_string(str_hash(prob->toString()));
-        fstream file(filename);
+        ofstream file;
+        file.open(filename);
         file << solu;
+        file.close();
 
     }
 
@@ -97,7 +101,7 @@ public:
         this->solver = solver;
     }
     virtual void handleClient(int socket) {
-        char buffer[256];
+        char buffer[1024];
         int n;
         string s;
         vector<string> startPoint;
@@ -106,9 +110,9 @@ public:
         vector<vector<string>> vec;
         vector<vector<string>> vec2;
         while (true) {
-            bzero(buffer,256);
+            bzero(buffer,1024);
             //cout << "Hi" << endl;
-            n = read( socket,buffer,255 );
+            n = read( socket,buffer,1023 );
 
             if (n < 0) {
                 perror("ERROR reading from socket");
@@ -137,13 +141,16 @@ public:
                 for (int i = 0; i < vec.size() - 2; i++) {
                     vec2.push_back(vec[i]);
                 }
-                /*if (cm->hasSolution(&vec2)) {
-                    s = cm->getSolution(&vec2);
+                Searchable<Point>* matrix = new MatrixSearch(vec2);
+                if (cm->hasSolution(matrix)) {
+                    s = cm->getSolution(matrix);
                 } else {
-                    MatrixSearch* matrix = new MatrixSearch(vec2);
+
                     s = StringSolution(solver->solve(matrix));
-                    cm->saveSolution(&vec2, &s);
-                }*/
+                    //s = "hi";
+                    cm->saveSolution(matrix, s);
+                }
+                //s = "hi";
 
 
                 n = write(socket,s.c_str(),s.length());
@@ -151,13 +158,13 @@ public:
                     perror("ERROR writing to socket");
                     exit(1);
                 }
-                for (vector<string> v: vec2) {
+                /*for (vector<string> v: vec2) {
                     for (string s : v) {
                         cout << s;
                         cout << ",";
                     }
                     cout << "yey" << endl;
-                }
+                }*/
 
                 break;
             }
